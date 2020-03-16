@@ -17,7 +17,12 @@
   --dark-very-dark-blue: hsl(207, 26%, 17%);
 }
 
+html {
+  height: 100%;
+}
+
 body {
+  height: 100%;
   font-size: 14px;
   font-family: 'Nunito Sans', sans-serif;
 }
@@ -39,6 +44,7 @@ body {
 }
 
 .header button {
+  padding-left: 32px;
   cursor: pointer;
   background: transparent;
   border: 0;
@@ -53,7 +59,8 @@ body {
   position: absolute;
   font-size: 18px;
   left: -20px;
-  top: 0;
+  left: 5px;
+  bottom: 3px;
   font-weight: 300;
 }
 
@@ -126,9 +133,10 @@ body {
 }
 
 .countries {
+  padding-bottom: 14vh;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 37.5px 75px;
+  grid-gap: 75px 75px;
 }
 
 .country {
@@ -214,6 +222,7 @@ body {
 
 .select-option:hover {
   background-color: #d8f1f1;
+  color: #000;
 }
 
 .light {
@@ -221,11 +230,17 @@ body {
 }
 
 .dark {
-  background-color: var(--dark-blue);
+  background-color: var(--dark-blue) !important;
+  color: #fff;
+}
+
+.dark-bg {
+  background-color: var(--dark-very-dark-blue) !important;
+  color: #fff;
 }
 
 .detail-header {
-  margin: 80px auto;
+  padding: 80px 0;
 }
 
 .detail-header button {
@@ -249,14 +264,14 @@ body {
 }
 
 .detail-info__about {
-  max-width: 600px;
+  max-width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100px auto 1fr;
 }
 
 .detail-info__flag img {
-  max-height: 360px;
+  max-width: 600px;
   box-shadow: 0 0 5px rgba(0, 0, 0, .1);
 }
 
@@ -265,7 +280,7 @@ body {
   grid-column: span 2;
 }
 
-.detail-info__about--button {
+.detail-info__about--buttom {
   grid-column: span 2;
   align-self: end;
   padding-bottom: 40px;
@@ -275,11 +290,12 @@ body {
   padding-bottom: 16px;
 }
 
-.detail-info-border__button {
+.detail-info-border__buttom {
   cursor: pointer;
   margin-left: 10px;
   background-color: transparent;
   border: 0;
+  border-radius: 2px;
   padding: 5px 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, .1);
 }

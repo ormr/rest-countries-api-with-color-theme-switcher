@@ -22,16 +22,22 @@ const uploadData = async () => {
   let response = await fetch('https://restcountries.eu/rest/v2/all');
   if (response.ok) {
     let data = await response.json();
-    // console.log(data);
     for await(country of data) {
-      // console.log(country);
       countries.insertAdjacentHTML( 'beforeend',
         generateHTML(country.flag, country.name, country.population, country.region, country.capital));
     }
     countrySearch();
-    // switchTheme();
+    switchTheme();
     // country, country.flag, country.name, country.nativeName, country.population, country.region, country.subregion, country.capital, country.topLevelDomain, country.currencies, country.languages, country.borders
-    showInDetail(data);
+    // showInDetail(data);
+    document.querySelector('.countries').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('country')) return;
+      let countryName = e.target.children[1].children[0].innerHTML;
+      showInDetail(data, countryName);
+      document.querySelector('.main-top').classList.add('inactive');
+      document.querySelector('.countries').classList.add('inactive');
+    });
+
   } else {
     throw new Error();
   }
@@ -120,16 +126,16 @@ function generateDetailHTML(flag, name, nativeName, population, region, subregio
               <p>Native name: <span class="detail-info__about--native-name">${nativeName}</span></p>
               <p>Population: <span class="detail-info__about--population">${numberWithCommas(population)}</span></p>
               <p>Region: <span class="detail-info__about--region">${region}</span></p>
-              <p>Sub Region: <span class="detail-info__about--sub-region">${subregion}</span></p>
-              <p>Capital: <span class="detail-info__about--capital">${capital}</span></p>
+              <p>Sub Region: <span class="detail-info__about--sub-region">${haveProperties(subregion)}</span></p>
+              <p>Capital: <span class="detail-info__about--capital">${haveProperties(capital)}</span></p>
             </div>
             <div class="detail-info__about--right">
               <p>Top Level Domain: <span class="detail-info__about--top-domain">${topLevelDomain.join(', ')}</span></p>
               <p>Currencies: <span class="detail-info__about--currencies">${showAll(currencies)}</span></p>
               <p>Languages: <span class="detail-info__about--languages">${showAll(languages)}</span></p>
             </div>
-            <div class="detail-info__about--button">
-              <p>Border Countries: <span class="detail-info-about--borders">${borders}</span></p>
+            <div class="detail-info__about--buttom">
+              Border Countries: <span class="detail-info-about--borders">${borders}</span>
             </div>
           </div>
         </div>
@@ -137,48 +143,71 @@ function generateDetailHTML(flag, name, nativeName, population, region, subregio
 `;
 }
 
+function haveProperties(property) {
+  return property ? property : 'None';
+}
+
 function showBorderCountries(countries, borders) {
   let result = [];
-  if (borders.length <= 1) return `<span>None</span>`;
+  if (borders.length < 1) return `<span>None</span>`;
   for (let border of borders) {
     for (let country of countries) {
       if (country.alpha3Code == border) {
-        result.push(`<button class="detail-info-border__button">${country.name}</button>`);
+        result.push(`<button class="detail-info-border__buttom">${country.name}</button>`);
       }
     }
   }
   return result.join('');
 }
-/*.onclick = (e) => console.log(e);*//*.addEventListener('click', (e) => {
-  if (!e.target.classList.contains('detail-info-border__button')) return;
-  console.log(e.target);
-});*/
 
-function showInDetail(countries) {
-  document.querySelector('.countries').addEventListener('click', (e) => {
-    if (!e.target.classList.contains('country')) return;
 
-    let countryName = e.target.children[1].children[0].innerHTML;
-
-    console.log(document.querySelector('.detail-info__about .detail-info__about--button'));
+function showInDetail(countries, countryName) {
 
     for (let country of countries) {
       if (countryName == country.name) {
-        let borderCountryName = showBorderCountries(countries, country.borders);
         document.querySelector('.main .container').insertAdjacentHTML( 'beforeend',
-          generateDetailHTML(country.flag, country.name, country.nativeName, country.population, country.region, country.subregion, country.capital, country.topLevelDomain, country.currencies, country.languages, borderCountryName));
+          generateDetailHTML(country.flag, country.name, country.nativeName, country.population, country.region, country.subregion, country.capital, country.topLevelDomain, country.currencies, country.languages, showBorderCountries(countries, country.borders)));
       }
     }
-
     // Header button
-
     document.querySelector('.detail-header button').onclick = (e) => {
       document.querySelector('.main-top').classList.remove('inactive');
       document.querySelector('.countries').classList.remove('inactive');
       document.querySelector('.country-detail').remove();
     }
 
-    document.querySelector('.main-top').classList.add('inactive');
-    document.querySelector('.countries').classList.add('inactive');
+    document.querySelector('.detail-info__about .detail-info__about--buttom').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('detail-info-border__buttom')) return;
+      document.querySelector('.country-detail').remove();
+      let countryName = e.target.innerHTML;
+      showInDetail(countries, countryName);
+    });
+
+    if (document.querySelector('.header').classList.contains('dark')) {
+      document.querySelector('.detail-header button').classList.toggle('dark');
+      for (let el of document.querySelectorAll('.detail-info-border__buttom')) {
+        el.classList.toggle('dark');
+      }
+    }
+}
+
+function switchTheme() {
+  document.querySelector('.header-button').addEventListener('click', (e) => {
+    document.body.classList.toggle('dark-bg');
+    document.querySelector('.header').classList.toggle('dark');
+    document.querySelector('.header-button').classList.toggle('dark');
+    document.querySelector('.main').classList.toggle('dark-bg');
+    document.querySelector('.main-top__input input[type="text"]').classList.toggle('dark');
+    document.querySelector('.main-top__select--custom').classList.toggle('dark');
+    document.querySelector('.select-options').classList.toggle('dark');
+    for(let key of document.querySelectorAll('.country')) {
+      key.classList.toggle('dark');
+    }
+    if (document.querySelector('.country-detail')) {
+      document.querySelector('.detail-header button').classList.toggle('dark');
+      for (let el of document.querySelectorAll('.detail-info-border__buttom')) {
+        el.classList.toggle('dark');
+      }
+    }
   });
 }
