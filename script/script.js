@@ -1,4 +1,4 @@
-function generateHTML(flag, name, population, region, capital) {
+function generateCountriesHTML(flag, name, population, region, capital) {
   return `
   <div class="country" tabindex="-1">
       <div class="country-flag" style="background-image: url(${flag});"></div>
@@ -17,19 +17,17 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-const uploadData = async () => {
+async function uploadData() {
   let countries = document.querySelector('.countries');
   let response = await fetch('https://restcountries.eu/rest/v2/all');
   if (response.ok) {
     let data = await response.json();
     for await(country of data) {
       countries.insertAdjacentHTML( 'beforeend',
-        generateHTML(country.flag, country.name, country.population, country.region, country.capital));
+        generateCountriesHTML(country.flag, country.name, country.population, country.region, country.capital));
     }
     countrySearch();
     switchTheme();
-    // country, country.flag, country.name, country.nativeName, country.population, country.region, country.subregion, country.capital, country.topLevelDomain, country.currencies, country.languages, country.borders
-    // showInDetail(data);
     document.querySelector('.countries').addEventListener('click', (e) => {
       if (!e.target.classList.contains('country')) return;
       let countryName = e.target.children[1].children[0].innerHTML;
@@ -84,7 +82,7 @@ document.querySelector('.select-options').addEventListener('click', (e) => sorty
 function countrySearch() {
   let searchInput = document.querySelector('div.main-top__input input[type="text"]');
   let countries = document.querySelectorAll('.country');
-
+  searchInput.onclick = () => document.querySelector('.select-title').innerHTML = 'Filter by region';
   searchInput.oninput = () => {
     for (country of countries) {
       // country.children[1].children[0] means name of country

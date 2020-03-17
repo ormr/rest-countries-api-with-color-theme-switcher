@@ -86,6 +86,7 @@ body {
 }
 
 .main-top__input {
+  color: #757575;
   position: relative;
 }
 
@@ -117,11 +118,8 @@ body {
   padding: 0 100px;
 }
 
-.main-top__select {
-  position: relative;
-}
 
-.main-top__select:before {
+.main-top__select--custom:before {
   position: absolute;
   font-family: 'icomoon';
   content: '\e900';
@@ -133,10 +131,11 @@ body {
 }
 
 .countries {
+  justify-content: center;
   padding-bottom: 14vh;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 75px 75px;
+  grid-template-columns: repeat(auto-fit, 264px);
+  grid-gap: 74px;
 }
 
 .country {
@@ -179,6 +178,7 @@ body {
 }
 
 .main-top__select--custom {
+  position: relative;
   user-select: none;
   cursor: pointer;
   border-radius: 4px;
@@ -240,7 +240,7 @@ body {
 }
 
 .detail-header {
-  padding: 80px 0;
+  padding: 50px 0;
 }
 
 .detail-header button {
@@ -302,4 +302,38 @@ body {
 
 .detail-info-about--borders {
   line-height: 35px;
+}
+
+
+@media (max-width: 376px) {
+  .header .container .h2 {
+    font-size: 18px;
+  }
+  .header-button {
+    font-size: 14px;
+  }
+  .container {
+    max-width: 330px;
+    margin: 0 auto;
+  }
+  .main-top {
+    grid-auto-flow: row;
+    grid-row-gap: 75px;
+  }
+  .main-top__input input {
+    width: 100%;
+  }
+  .detail-info {
+    grid-template-columns: 1fr;
+  }
+  .detail-info__flag img {
+    max-width: 330px;
+  }
+  .detail-info__about {
+    display: block;
+  }
+  .detail-info-about--borders {
+    margin-left: -10px;
+    display: block;
+  }
 }
